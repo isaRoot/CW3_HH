@@ -1,6 +1,7 @@
 # This file may be used to create an environment using:
 # $ conda create --name <env> --file <this file>
 # platform: win-64
+# created by "conda list -e > requirements.txt"
 ca-certificates==2019.10.16
 certifi==2019.9.11
 chardet==3.0.4
