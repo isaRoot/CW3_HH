@@ -23,7 +23,7 @@ log = telebot.logger
 
 # TOKEN = '963004625:AAHgQxjlFFiOVSx7tmeyORmWx28vy2maK8E'  # полученный у @BotFather
 
-telebot.apihelper.proxy = {'https': config.PROXY}
+telebot.apihelper.proxy = dict(https=config.PROXY)
 # https://t.me/socks?server=116.202.18.252&port=4002&user=user_8abd0cee&pass=c3f33dee779316d24e597d1c8abd0cee
 bot = telebot.TeleBot(config.TOKEN)
 
