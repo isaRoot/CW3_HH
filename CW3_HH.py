@@ -1,37 +1,44 @@
 import sys
 
 import telebot
+import time
 import logging
 
 import config
-
+import forward_handler
 telebot.logger.setLevel(logging.INFO)
 
 
 log = telebot.logger
 
-
-# logger = logging.getLogger('TeleBot')
-# formatter = logging.Formatter(
-#     '%(asctime)s (%(filename)s:%(lineno)d %(threadName)s) %(levelname)s - %(name)s: "%(message)s"'
-# )
-# console_output_handler = logging.StreamHandler(sys.stderr)
-# console_output_handler.setFormatter(formatter)
-# logger.addHandler(console_output_handler)
-#
-# logger.setLevel(logging.INFO)
-
-# TOKEN = '963004625:AAHgQxjlFFiOVSx7tmeyORmWx28vy2maK8E'  # полученный у @BotFather
-
-telebot.apihelper.proxy = dict(https=config.PROXY)
+telebot.apihelper.proxy = {'https': config.PROXY}
 # https://t.me/socks?server=116.202.18.252&port=4002&user=user_8abd0cee&pass=c3f33dee779316d24e597d1c8abd0cee
 bot = telebot.TeleBot(config.TOKEN)
 
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    sent = bot.send_message(message.chat.id, 'Как тебя зовут?')
+    sent = bot.send_message(message.chat.id, 'Добро пожаловать, {name}!'.format(name=message.from_user.username))
     log.info('received /start command from {name}'.format(name=message.from_user.username))
+
+
+@bot.message_handler(func=lambda message: message.forward_from, content_types=["text", "photo", "video"])
+def is_forward(message):
+    forward_handler.message_forward_income(message)
+    sent = bot.send_message(message.chat.id, 'Добро пожаловать, {name}!'.format(name=message.from_user.username))
+    log.info('received /start command from {name}'.format(name=message.from_user.username))
+
+
+@bot.message_handler(regexp='Лот #.*')
+def test_lot(message):
+    sent = bot.send_message(message.chat.id, 'Посмотри лот, {name}!'.format(name=message.from_user.username))
+    log.info('received /start command from {name}'.format(name=message.from_user.username))
+
+
+@bot.message_handler(commands=['hello'])
+def start(message):
+    sent = bot.send_message(message.chat.id, 'Как тебя зовут?')
+    log.info('received /hello command from {name}'.format(name=message.from_user.username))
     bot.register_next_step_handler(sent, hello)
 
 
@@ -54,4 +61,10 @@ def def_handler(message):
     # bot.reply_to(message.chat.id, 'something')
 
 
-bot.polling()
+# Polling
+while True:
+    try:
+        bot.polling(none_stop=True)
+    except Exception as e:
+        log.error(e)
+        time.sleep(15)
