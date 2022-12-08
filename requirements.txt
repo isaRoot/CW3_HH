@@ -3,7 +3,7 @@ telebot
 # $ conda create --name <env> --file <this file>
 # platform: win-64
 # ca-certificates==2019.10.16
-certifi==2019.9.11
+certifi==2022.12.7
 chardet==3.0.4
 idna==2.8
 openssl==1.1.1d #
